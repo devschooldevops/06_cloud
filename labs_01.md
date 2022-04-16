@@ -28,4 +28,11 @@ Congratulations, you've just created your first azure function, a serverless app
 Extra exercises
 ---------------
 Of course it doesn't end here, the rest of the exercises are more open ended and require you to dig around in the azure portal and its documentation
-* figure out which `HostInstanceId` is being used when you call your function
+
+**Level 1:**
+* Figure out which `HostInstanceId` is being used when you call your function
+* add an extra variable `lastname` to the HTTP call and print the last name
+
+**Level 2:**
+* Create a simple function that squares every number you insert into the call
+* Create a function which is not an HTTP triger
