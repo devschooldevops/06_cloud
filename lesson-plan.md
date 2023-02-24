@@ -1,11 +1,11 @@
 # Lesson plan
 ## General information
 
-**Duration**: 3 hours (max 1 hour theory)
+**Duration**: 3 hours (1h theory, 2h practic)
 
-**Primary teacher**: <>
+**Primary teacher**: 
 
-**Secondary teacher**: <>
+**Secondary teacher**: 
 
 ## Goal
 At the end of the lesson, the studens should:
@@ -21,7 +21,8 @@ At the end of the lesson, the studens should:
 - Local machines
 
 ## Prerequisites
-N/A
+- what do the students need to have installed before the lesson
+- what do the students need to know before the lesson
 
 ## Agenda
 Example:
