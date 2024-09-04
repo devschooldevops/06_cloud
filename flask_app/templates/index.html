@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Cloud Website</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; padding: 20px; }
+        h1 { color: #333; }
+                 ul { padding-left: 20px; }
+    </style>
+</head>
+<body>
+<h1>Hi, we are {{ team_name }}!</h1>
+<p>Welcome to our {{ adjective }} cloud website!</p>
+
+<h2>Some things about ourselves:</h2>
+<ul>
+    <li>Foods we love:
+        <ul>
+            {% for food in foods %}
+            <li>{{ food }}</li>
+            {% endfor %}
+        </ul>
+    </li>
+    <li>Drinks we love:
+        <ul>
+            {% for drink in drinks %}
+            <li>{{ drink }}</li>
+            {% endfor %}
+        </ul>
+    </li>
+</ul>
+
+<p>Thanks for visiting our website!</p>
+<p>{{ name }}</p>
+</body>
+</html>
