@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Team Progress Tracker</title>
+    <title>Team Progress 💪🏻</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.2/socket.io.js"></script>
     <style>
         body {
@@ -142,7 +142,7 @@
                 const cell = row.insertCell(i + 1);
                 const select = document.createElement('select');
                 select.innerHTML = `
-                    <option value="not-started" ${team.tasks[i] === 'not-started' ? 'selected' : ''}>Not Started</option>
+                    <option value="not-started" ${team.tasks[i] === 'not-started' ? 'selected' : ''}>To Do</option>
                     <option value="doing" ${team.tasks[i] === 'doing' ? 'selected' : ''}>Doing</option>
                     <option value="done" ${team.tasks[i] === 'done' ? 'selected' : ''}>Done</option>
                     <option value="help" ${team.tasks[i] === 'help' ? 'selected' : ''}>Help</option>
