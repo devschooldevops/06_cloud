@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Progress Scoreboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.2/socket.io.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .gif-container {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="gif-container">
+    <img src="/api/placeholder/400/200" alt="Celebration GIF">
+</div>
+<div class="container">
+    <h1>Team Progress Scoreboard</h1>
+    <table id="scoreboardTable">
+        <tr>
+            <th>Rank</th>
+            <th>Team Name</th>
+            <th>Completion Time</th>
+            <th>IP Address</th>
+            <th>URL</th>
+        </tr>
+    </table>
+</div>
+
+<script>
+    const socket = io();
+
+    function updateScoreboard(scoreboard) {
+        const table = document.getElementById('scoreboardTable');
+        // Clear existing rows except header
+        while (table.rows.length > 1) {
+            table.deleteRow(1);
+        }
+
+        scoreboard.forEach((team, index) => {
+            const row = table.insertRow(-1);
+            const rankCell = row.insertCell(0);
+            const nameCell = row.insertCell(1);
+            const timeCell = row.insertCell(2);
+            const ipCell = row.insertCell(3);
+            const urlCell = row.insertCell(4);
+
+            rankCell.textContent = index + 1;
+            nameCell.textContent = team.name;
+            timeCell.textContent = new Date(team.completionTime).toLocaleString();
+            ipCell.textContent = team.ip || 'N/A';
+            urlCell.innerHTML = team.url ? `<a href="${team.url}" target="_blank">${team.url}</a>` : 'N/A';
+        });
+    }
+
+    socket.on('scoreboardUpdated', (updatedScoreboard) => {
+        updateScoreboard(updatedScoreboard);
+    });
+
+    // Initial scoreboard setup
+    socket.emit('getScoreboard');
+</script>
+</body>
+</html>

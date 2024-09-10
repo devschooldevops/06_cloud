@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Progress Tracker</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.2/socket.io.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        input, button, select {
+            padding: 10px;
+            font-size: 16px;
+        }
+        button {
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        select {
+            width: 100%;
+            margin-bottom: 5px;
+        }
+        .not-started { background-color: #2196F3; color: white; }
+        .doing { background-color: #87CEFA; color: black; }
+        .done { background-color: #4CAF50; color: white; }
+        .help { background-color: #FF9800; color: white; }
+        .ip-input, .url-input {
+            width: 90%;
+            padding: 5px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Team Progress Tracker</h1>
+    <div class="input-group">
+        <input type="text" id="teamName" placeholder="Team Name">
+        <input type="text" id="personA" placeholder="Person A">
+        <input type="text" id="personB" placeholder="Person B">
+        <button onclick="addTeam()">Add Team</button>
+    </div>
+    <table id="progressTable">
+        <tr>
+            <th>Team Name</th>
+            <th>Task 1</th>
+            <th>Task 2</th>
+            <th>Task 3</th>
+            <th>Task 4</th>
+            <th>Task 5</th>
+            <th>Task 6</th>
+            <th>Task 7</th>
+            <th>Task 8</th>
+            <th>Task 9</th>
+            <th>Task 10</th>
+            <th>Task 11</th>
+        </tr>
+    </table>
+</div>
+
+<script>
+    const socket = io();
+    let teams = [];
+
+    function addTeam() {
+        const teamName = document.getElementById('teamName').value;
+        const personA = document.getElementById('personA').value;
+        const personB = document.getElementById('personB').value;
+
+        if (teamName && personA && personB && teams.length < 6) {
+            const team = {
+                name: teamName,
+                personA,
+                personB,
+                tasks: Array(11).fill('not-started'),
+                ip: '',
+                url: ''
+            };
+            teams.push(team);
+            updateTable();
+            socket.emit('updateTeams', teams);
+            clearInputs();
+        }
+    }
+
+    function clearInputs() {
+        document.getElementById('teamName').value = '';
+        document.getElementById('personA').value = '';
+        document.getElementById('personB').value = '';
+    }
+
+    function updateTable() {
+        const table = document.getElementById('progressTable');
+        // Clear existing rows except header
+        while (table.rows.length > 1) {
+            table.deleteRow(1);
+        }
+
+        teams.forEach((team, index) => {
+            const row = table.insertRow(-1);
+            const nameCell = row.insertCell(0);
+            nameCell.textContent = `${team.name} (${team.personA}, ${team.personB})`;
+
+            for (let i = 0; i < 11; i++) {
+                const cell = row.insertCell(i + 1);
+                const select = document.createElement('select');
+                select.innerHTML = `
+                    <option value="not-started" ${team.tasks[i] === 'not-started' ? 'selected' : ''}>Not Started</option>
+                    <option value="doing" ${team.tasks[i] === 'doing' ? 'selected' : ''}>Doing</option>
+                    <option value="done" ${team.tasks[i] === 'done' ? 'selected' : ''}>Done</option>
+                    <option value="help" ${team.tasks[i] === 'help' ? 'selected' : ''}>Help</option>
+                `;
+                select.className = team.tasks[i];
+                select.onchange = function() {
+                    team.tasks[i] = this.value;
+                    this.className = this.value;
+                    socket.emit('updateTeams', teams);
+                };
+                cell.appendChild(select);
+
+                if (i === 5) { // Task 6 (IP)
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.value = team.ip;
+                    input.placeholder = 'Enter IP';
+                    input.className = 'ip-input';
+                    input.onchange = function() {
+                        team.ip = this.value;
+                        socket.emit('updateTeams', teams);
+                    };
+                    cell.appendChild(document.createElement('br'));
+                    cell.appendChild(input);
+                } else if (i === 6) { // Task 7 (URL)
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.value = team.url;
+                    input.placeholder = 'Enter URL';
+                    input.className = 'url-input';
+                    input.onchange = function() {
+                        team.url = this.value;
+                        socket.emit('updateTeams', teams);
+                    };
+                    cell.appendChild(document.createElement('br'));
+                    cell.appendChild(input);
+                }
+            }
+        });
+    }
+
+    socket.on('teamsUpdated', (updatedTeams) => {
+        teams = updatedTeams;
+        updateTable();
+    });
+
+    // Initial table setup
+    updateTable();
+</script>
+</body>
+</html>
