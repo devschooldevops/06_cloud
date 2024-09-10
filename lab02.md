@@ -22,10 +22,11 @@
 
 ## 4. Clone repo and set up the project
 1. Clone repo: `git clone https://github.com/devschooldevops/06_cloud.git`
-2. Go into the `flask-app` directory
-3. Create a venv (virtual environment): `python3 -m venv venv`
-4. Activate the virtual environment: `source venv/bin/activate`
-5. Install required packages: `pip install -r requirements.txt`
+2. Use branch `2024`
+3. Go into the `flask-app` directory
+4. Create a venv (virtual environment): `python3 -m venv venv`
+5. Activate the virtual environment: `source venv/bin/activate`
+6. Install required packages: `pip install -r requirements.txt`
 
 ## 5. Modify the application defaults
 1. Edit the `app.py` using `vi` with information about you, the people from the team
